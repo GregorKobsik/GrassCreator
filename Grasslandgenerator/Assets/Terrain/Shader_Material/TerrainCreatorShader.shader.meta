@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 1c79b65e44bcad44fa7d13e8cbcedb8d
+timeCreated: 1483756465
+licenseType: Free
+ShaderImporter:
+  defaultTextures:
+  - _NormalTex: {instanceID: 0}
+  - _MainTex: {fileID: 2800000, guid: bf78c35e82ede5b4d9dcd4b666aad9d1, type: 3}
+  - _Texture1: {fileID: 2800000, guid: 0fe22a31b2b6b2843a2fb24bd7a3af89, type: 3}
+  - _NormalTex1: {fileID: 2800000, guid: 9c1ba5ec726facf4ba62b86092fc58a7, type: 3}
+  - _ParallaxTex1: {fileID: 2800000, guid: 0c01c086c64e4e645bd76e88a3dd9cd4, type: 3}
+  - _Texture2: {fileID: 2800000, guid: 733f973e0f5c370448bb9029b2ec707b, type: 3}
+  - _NormalTex2: {fileID: 2800000, guid: a023ac44194e2aa458d1bd81fd163c79, type: 3}
+  - _ParallaxTex2: {fileID: 2800000, guid: d53712f310aa0fe4f8e164320e08fc19, type: 3}
+  - _Texture3: {fileID: 2800000, guid: 0bdfe7f6227fb3f488cc2cfdb03efa84, type: 3}
+  - _NormalTex3: {fileID: 2800000, guid: 1ed42e67c1ce295439c99835292140a7, type: 3}
+  - _ParallaxTex3: {fileID: 2800000, guid: 8766c68c2fb20264d96dbb0435ecf9de, type: 3}
+  - _Texture4: {fileID: 2800000, guid: 3cb909634ff56e04fa308fcd76ddab46, type: 3}
+  - _NormalTex4: {fileID: 2800000, guid: 0509493ab9e247446b7cf371d09d4f2c, type: 3}
+  - _ParallaxTex4: {fileID: 2800000, guid: 6589a871bb8bf6048badc5c5b49930e2, type: 3}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,73 @@
+﻿#pragma kernel CSMain2D
+#pragma kernel CSMain3D
+#pragma kernel CSMain4D
+
+#pragma enable_d3d11_debug_symbols
+#define thread_group_size_x 256
+
+#include "noiseSimplex.cginc"
+
+uniform int _numPoints;
+
+struct input2DStruct
+{
+	float2 v;
+};
+
+struct input3DStruct
+{
+	float3 v;
+};
+
+struct input4DStruct 
+{
+	float4 v;
+};
+
+struct outputStruct {
+	float noise;
+};
+
+// Compute Buffers
+RWStructuredBuffer<input2DStruct> _inputBuffer2D;
+RWStructuredBuffer<input3DStruct> _inputBuffer3D;
+RWStructuredBuffer<input4DStruct> _inputBuffer4D;
+
+RWStructuredBuffer<outputStruct> _outputBuffer;
+
+// Kernel for 2D PerlinNoise
+[numthreads(thread_group_size_x, 1, 1)]
+void CSMain2D(uint3 id : SV_DispatchThreadID)
+{
+	int idx = id.x;
+
+	if (idx > _numPoints) {
+		return;
+	}
+	_outputBuffer[idx].noise = snoise(_inputBuffer2D[idx].v);
+}
+
+// Kernel for 3D PerlinNoise
+[numthreads(thread_group_size_x, 1, 1)]
+void CSMain3D(uint3 id : SV_DispatchThreadID)
+{
+	int idx = id.x;
+
+	if (idx > _numPoints) {
+		return;
+	}
+	_outputBuffer[idx].noise = snoise(_inputBuffer3D[idx].v);
+}
+
+// Kernel for 4D PerlinNoise
+[numthreads(thread_group_size_x, 1, 1)]
+void CSMain4D(uint3 id : SV_DispatchThreadID)
+{
+	int idx = id.x;
+
+	if (idx > _numPoints) {
+		return;
+	}
+	_outputBuffer[idx].noise = snoise(_inputBuffer4D[idx].v);
+}
+

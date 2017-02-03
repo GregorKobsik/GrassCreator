@@ -1,0 +1,79 @@
+﻿#pragma kernel CSMain
+
+// Thread group sizes 
+#define thread_group_size_x 8
+#define thread_group_size_y 8
+#define thread_group_size_z 1
+#define threads_per_group 64
+
+float _Speed = 100;
+float _Density = 0.5;
+float3 _RainPosition = float3(0.0, 0.0, 0.0);
+int _RainSize = 128;
+int _RainHeight = 64;
+int _RainDropsCount;
+int _ThreadGroupCount;
+
+// Structure to store x,y,z coords of each drop
+struct positionStruct
+{
+    float3 pos;
+};
+
+// Structure to store starting Y coords for each drop
+struct startYStruct
+{
+    float offset;
+};
+
+// Structure to store current Frame-Time for interpolation
+struct constStruct
+{
+    float t;
+};
+
+struct posMod
+{
+	float2 mod;
+};
+
+// Compute Buffers
+RWStructuredBuffer<posMod> velocitiesBuffer;
+RWStructuredBuffer<constStruct> frameTimeBuffer;
+RWStructuredBuffer<startYStruct> startPointBuffer;
+RWStructuredBuffer<positionStruct> outputBuffer1;
+RWStructuredBuffer<positionStruct> outputBuffer2;
+
+[numthreads(thread_group_size_x, thread_group_size_y, thread_group_size_z)]
+void CSMain (uint3 id : SV_DispatchThreadID, uint3 grpThreadID : SV_GroupThreadID, uint3 grpID : SV_GroupID)
+{
+	// Calcutation of the "real" ThreadID
+	// We will write the new pos to this ID of the outputbuffer-Array
+    int threadID = id.x + id.y * thread_group_size_y * threads_per_group;
+    
+	// Calculate the current Position based on the Rainsize and dropsperside
+	// whatch out for id.x and id.y not being the x/y-coord but being the x/y-dimension of our threadgroups
+	// startPointBuffer[idx].offset can be used to include variations in the starting height of the drops
+	float dropsPerSide = sqrt(_RainDropsCount * _Density);
+	float x = (id.x) * _RainSize / dropsPerSide;
+	float z = (id.y) * _RainSize / dropsPerSide;
+
+	// Discard all Threads which operate on non existing data
+	if (x > _RainSize) {
+		return;
+	}
+	if (z > _RainSize) {
+		return;
+	}
+
+	// Set the current position
+    float3 pos = (float3(x, 0, z) + _RainPosition) ;
+
+	// Interpolation on between Height and 0 with FrameTime and Speed and Velocities
+	pos.y = (lerp(_RainHeight, 0, (frameTimeBuffer[0].t * (velocitiesBuffer[threadID].mod.x * _Speed)) % 1 )) ;
+	pos.y += 9; // Current Fix to adjust the Rain-Height to the TerrainMap
+
+	// Write the calculated Position to the outputBuffers
+    outputBuffer1[threadID].pos = pos;
+	outputBuffer2[threadID].pos = pos;
+}
